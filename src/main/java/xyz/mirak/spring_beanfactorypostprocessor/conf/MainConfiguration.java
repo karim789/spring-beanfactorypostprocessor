@@ -8,9 +8,9 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Guillaume;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Karim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.KarimBeanHolder;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.MegaSuperKarim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Nicolas;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperGuillaume;
-import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperKarim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
 import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.SayenBeanFactoryPostProcessor;
 
@@ -28,7 +28,7 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	@Transform(type = SuperKarim.class)
+	@Transform(type = MegaSuperKarim.class)
 	public Karim Karim() {
 		return new Karim();
 	}

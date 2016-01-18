@@ -59,7 +59,7 @@ public class AppTest {
 		Assert.isInstanceOf(Sayan.class, guillaume);
 		Assert.isInstanceOf(SuperGuillaume.class, guillaume);
 		//Assert.isInstanceOf(Karim.class, karim);
-		Assert.isInstanceOf(SuperSayan.class, karim);
+		//Assert.isInstanceOf(SuperSayan.class, karim);
 		Assert.isInstanceOf(MegaSuperKarim.class, karim);
 		
 		//Assert.notNull(karimBeanHolder.getKarim());

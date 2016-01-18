@@ -7,14 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
@@ -25,10 +26,13 @@ import xyz.mirak.spring_beanfactorypostprocessor.annotation.Transform;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 
-public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Ordered {
 
 	private static Logger logger = LoggerFactory.getLogger(SayenBeanFactoryPostProcessor.class);
-
+	@Override
+	public int getOrder() {
+		return HIGHEST_PRECEDENCE;
+	}
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory bf) throws BeansException {
 		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) bf;
@@ -63,8 +67,8 @@ public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 			beanFactory.registerBeanDefinition(factoryBeanName, sayenFactoryBeanDefinition);
 
 			String newBeanName = originalBeanName;
-			//BeanDefinition newBeanDefinition = new AnnotatedGenericBeanDefinition(sayenClass);
-			BeanDefinition newBeanDefinition = originalBeanDefinition;
+			BeanDefinition newBeanDefinition = new AnnotatedGenericBeanDefinition(sayenClass);
+			//BeanDefinition newBeanDefinition = originalBeanDefinition;
 			//newBeanDefinition.setPrimary(originalBeanDefinition.isPrimary());
 			//newBeanDefinition.setScope(originalBeanDefinition.getScope());
 			//newBeanDefinition.setAutowireCandidate(originalBeanDefinition.isAutowireCandidate());
@@ -73,14 +77,15 @@ public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 			//newBeanDefinition.setOriginatingBeanDefinition(originalBeanDefinition);
 			newBeanDefinition.setFactoryBeanName(factoryBeanName);
 			newBeanDefinition.setFactoryMethodName(factoryBeanMethodName);
-			//newBeanDefinition.setBeanClassName(originalBeanDefinition.getBeanClassName());
+			//newBeanDefinition.setBeanClassName(sayenAnnotation.type().getName());
 			
-			//logger.debug("remove beanName=" + originalBeanName + ", " + originalBeanDefinition.toString());
-			//beanFactory.removeBeanDefinition(originalBeanName);
+			logger.debug("remove beanName=" + originalBeanName + ", " + originalBeanDefinition.toString());
+			beanFactory.removeBeanDefinition(originalBeanName);
 			
 			logger.debug("register beanName=" + newBeanName + ", " + newBeanDefinition.toString());
-			//beanFactory.registerBeanDefinition(newBeanName, newBeanDefinition);
-
+			beanFactory.registerBeanDefinition(newBeanName, newBeanDefinition);
+			//Object bean = beanFactory.getBean(factoryBeanName);
+			//bean.toString();
 		}
 
 	}
@@ -119,7 +124,7 @@ public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 		return factoryMethod.getMethodName();
 	}
 
-	public static class TransformFactoryBean {
+	public static class TransformFactoryBean implements FactoryBean<Sayan> {
 
 		@Autowired
 		private AutowiredBean pouet;
@@ -130,7 +135,17 @@ public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 		public Sayan getObject() throws Exception {
 			return objectType.getConstructor().newInstance();
 		}
-
+		
+		@Override
+		public Class<Sayan> getObjectType() {
+			return objectType;
+		}
+		
+		@Override
+		public boolean isSingleton() {
+			return true;
+		}
+		
 		public void setObjectType(Class<Sayan> objectType) {
 			this.objectType = objectType;
 		}
@@ -139,6 +154,10 @@ public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 			return pouet;
 		}
 
+
+
 	}
+
+
 
 }
