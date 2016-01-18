@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
-import xyz.mirak.spring_beanfactorypostprocessor.bean.KarimBeanHolder;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.BeanHolder;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Personne;
 import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
 
@@ -32,7 +32,7 @@ public class App
 			logger.debug(e.getValue().getName());
 			
 		}
-		KarimBeanHolder karimBeanHolder = ctx.getBean(KarimBeanHolder.class);
+		BeanHolder karimBeanHolder = ctx.getBean(BeanHolder.class);
 		Assert.notNull(karimBeanHolder.getKarim());
 		ctx.destroy();
 		ctx.close();

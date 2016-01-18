@@ -5,14 +5,14 @@ import org.springframework.context.annotation.Configuration;
 
 import xyz.mirak.spring_beanfactorypostprocessor.annotation.Transform;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
-import xyz.mirak.spring_beanfactorypostprocessor.bean.Guillaume;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.BeanHolder;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Karim;
-import xyz.mirak.spring_beanfactorypostprocessor.bean.KarimBeanHolder;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.MegaSuperKarim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Nicolas;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperGuillaume;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
 import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.SayenBeanFactoryPostProcessor;
+import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.SayenBeanFactoryPostProcessor.TransformFactoryBean;
 
 @Configuration
 public class MainConfiguration {
@@ -27,16 +27,25 @@ public class MainConfiguration {
 		return new AutowiredBean();
 	}
 
+	//@Bean
+	/*@Transform(type = MegaSuperKarim.class)*/
+	//public Karim Karim() {
+	//	return new Karim();
+	//}
+
 	@Bean
 	@Transform(type = MegaSuperKarim.class)
-	public Karim Karim() {
-		return new Karim();
+	public TransformFactoryBean Karim() {
+		TransformFactoryBean transformFactoryBean = new TransformFactoryBean();
+		transformFactoryBean.setObjectType(Karim.class);
+		return transformFactoryBean;
 	}
 
 	@Bean
-	@Transform(type = SuperGuillaume.class)
-	public Guillaume Guillaume() {
-		return new Guillaume();
+	public TransformFactoryBean Guillaume() {
+		TransformFactoryBean transformFactoryBean = new TransformFactoryBean();
+		transformFactoryBean.setObjectType(SuperGuillaume.class);
+		return transformFactoryBean;
 	}
 
 	@Bean
@@ -50,7 +59,7 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	public KarimBeanHolder karimBeanHolder() {
-		return new KarimBeanHolder();
+	public BeanHolder beanHolder() {
+		return new BeanHolder();
 	}
 }
