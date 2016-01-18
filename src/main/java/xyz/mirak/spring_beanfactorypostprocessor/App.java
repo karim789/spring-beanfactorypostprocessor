@@ -3,6 +3,8 @@ package xyz.mirak.spring_beanfactorypostprocessor;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 
@@ -16,20 +18,22 @@ import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
  */
 public class App
 {
+	
+	private static Logger logger = LoggerFactory.getLogger(App.class);
+
 	public static void main(String[] args)
 	{
 		System.out.println("Hello World!");
 
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(MainConfiguration.class);
 
-		ctx.register(MainConfiguration.class);
-		ctx.refresh();
 		Map<String, Personne> beansOfType = ctx.getBeansOfType(Personne.class);
 		for (Entry<String, Personne> e : beansOfType.entrySet()) {
-			System.out.println(e.getValue().getName());
+			logger.debug(e.getValue().getName());
+			
 		}
-		KarimBeanHolder injectedBean = ctx.getBean(KarimBeanHolder.class);
-		Assert.notNull(injectedBean.getKarim());
+		KarimBeanHolder karimBeanHolder = ctx.getBean(KarimBeanHolder.class);
+		Assert.notNull(karimBeanHolder.getKarim());
 		ctx.destroy();
 		ctx.close();
 	}

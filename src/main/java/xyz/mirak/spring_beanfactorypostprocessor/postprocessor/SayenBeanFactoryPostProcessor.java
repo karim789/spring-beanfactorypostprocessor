@@ -1,5 +1,6 @@
 package xyz.mirak.spring_beanfactorypostprocessor.postprocessor;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,92 +13,130 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.MethodMetadata;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
-import xyz.mirak.spring_beanfactorypostprocessor.annotation.Sayen;
+import xyz.mirak.spring_beanfactorypostprocessor.annotation.Transform;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
-import xyz.mirak.spring_beanfactorypostprocessor.bean.Personne;
-import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperSayen;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 
 public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
 	private static Logger logger = LoggerFactory.getLogger(SayenBeanFactoryPostProcessor.class);
 
 	@Override
-	public void postProcessBeanFactory(
-			ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		DefaultListableBeanFactory d = (DefaultListableBeanFactory) beanFactory;
+	public void postProcessBeanFactory(ConfigurableListableBeanFactory bf) throws BeansException {
+		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) bf;
 
-		String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
+		for (String originalBeanName : beanFactory.getBeanDefinitionNames()) {
+			logger.debug("beanName:" + originalBeanName);
 
-		for (String beanName : beanDefinitionNames) {
-			logger.info("beanName:" + beanName);
-
-			BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
-			if (beanDefinition.isAbstract()) {
+			BeanDefinition originalBeanDefinition = beanFactory.getBeanDefinition(originalBeanName);
+			if (originalBeanDefinition.isAbstract()) {
 				continue;
 			}
 
-			Class<?> type = beanFactory.getType(beanName);
-			Sayen findAnnotation = AnnotationUtils.findAnnotation(type, Sayen.class);
-			if (findAnnotation == null) {
-				continue;
+			Transform sayenAnnotation = getMethodAnnotation(beanFactory, originalBeanDefinition);
+			Class<?> originalBeanClass = beanFactory.getType(originalBeanName);
+
+			if (sayenAnnotation == null) {
+				sayenAnnotation = AnnotationUtils.findAnnotation(originalBeanClass, Transform.class);
+				if (sayenAnnotation == null) {
+					continue;
+				}
 			}
-			logger.info(beanName + " est Super Sayen");
 
-			Class<? extends SuperSayen> sayenType = findAnnotation.type();
+			Class<? extends Sayan> sayenClass = sayenAnnotation.type();
 
-			AnnotatedGenericBeanDefinition sayenFactoryBeanDefinition = new AnnotatedGenericBeanDefinition(
-					SayenFactoryBean.class);
-			MutablePropertyValues pvs = new MutablePropertyValues();
-			pvs.add("objectType", sayenType);
-			sayenFactoryBeanDefinition.setPropertyValues(pvs);
+			AnnotatedGenericBeanDefinition sayenFactoryBeanDefinition = new AnnotatedGenericBeanDefinition(TransformFactoryBean.class);
+			setPropertyValues(sayenClass, sayenFactoryBeanDefinition);
 
-			AnnotationMetadata metadata = sayenFactoryBeanDefinition.getMetadata();
-			Set<MethodMetadata> annotatedMethods = metadata.getAnnotatedMethods(Bean.class.getName());
-			Assert.isTrue(1 == annotatedMethods.size(), "just one factory method must have @Bean annotation");
-			MethodMetadata factoryMethod = annotatedMethods.iterator().next();
-			String factoryMethodName = factoryMethod.getMethodName();
+			String factoryBeanMethodName = factoryMethodName(sayenFactoryBeanDefinition);
+			String factoryBeanName = originalBeanClass.getSimpleName() + sayenClass.getSimpleName() + "FactoryBean";
 
-			String factoryBeanName = type.getSimpleName() + sayenType.getSimpleName() + "FactoryBean";
-			d.registerBeanDefinition(factoryBeanName, sayenFactoryBeanDefinition);
-			logger.debug("register beanName=" + factoryBeanName + ", "
-					+ sayenFactoryBeanDefinition.toString());
-			d.removeBeanDefinition(beanName);
-			logger.debug("remove beanName=" + beanName + ", " + beanDefinition.toString());
+			logger.debug("register beanName=" + factoryBeanName + ", " + sayenFactoryBeanDefinition.toString());
+			beanFactory.registerBeanDefinition(factoryBeanName, sayenFactoryBeanDefinition);
 
-			AnnotatedGenericBeanDefinition newBeanDefinition = new AnnotatedGenericBeanDefinition(
-					sayenType);
+			String newBeanName = originalBeanName;
+			//BeanDefinition newBeanDefinition = new AnnotatedGenericBeanDefinition(sayenClass);
+			BeanDefinition newBeanDefinition = originalBeanDefinition;
+			//newBeanDefinition.setPrimary(originalBeanDefinition.isPrimary());
+			//newBeanDefinition.setScope(originalBeanDefinition.getScope());
+			//newBeanDefinition.setAutowireCandidate(originalBeanDefinition.isAutowireCandidate());
+			//newBeanDefinition.setRole(originalBeanDefinition.getRole());
+			//newBeanDefinition.setLazyInit(originalBeanDefinition.isLazyInit());
+			//newBeanDefinition.setOriginatingBeanDefinition(originalBeanDefinition);
 			newBeanDefinition.setFactoryBeanName(factoryBeanName);
-
-			newBeanDefinition.setFactoryMethodName(factoryMethodName);
-			newBeanDefinition.setBeanClassName(Personne.class.getName());
-			d.registerBeanDefinition(beanName, newBeanDefinition);
-			logger.debug("register beanName=" + beanName + ", " + newBeanDefinition.toString());
+			newBeanDefinition.setFactoryMethodName(factoryBeanMethodName);
+			//newBeanDefinition.setBeanClassName(originalBeanDefinition.getBeanClassName());
+			
+			//logger.debug("remove beanName=" + originalBeanName + ", " + originalBeanDefinition.toString());
+			//beanFactory.removeBeanDefinition(originalBeanName);
+			
+			logger.debug("register beanName=" + newBeanName + ", " + newBeanDefinition.toString());
+			//beanFactory.registerBeanDefinition(newBeanName, newBeanDefinition);
 
 		}
 
 	}
 
-	public static class SayenFactoryBean {
+	private Transform getMethodAnnotation(DefaultListableBeanFactory beanFactory, BeanDefinition originalBeanDefinition) {
+		String originalBeanFactoryBeanName = originalBeanDefinition.getFactoryBeanName();
+		String originalBeanFactoryMethodName = originalBeanDefinition.getFactoryMethodName();
+
+		if (originalBeanFactoryBeanName == null || originalBeanFactoryMethodName == null) {
+			return null;
+		}
+
+		Class<?> originalBeanFactoryBeanClass = ClassUtils.getUserClass(beanFactory.getType(originalBeanFactoryBeanName));
+		try {
+			Method method = originalBeanFactoryBeanClass.getMethod(originalBeanFactoryMethodName);
+			return AnnotationUtils.getAnnotation(method, Transform.class);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	private void setPropertyValues(Class<?> clazz, AnnotatedGenericBeanDefinition beanDefinition) {
+		MutablePropertyValues pvs = new MutablePropertyValues();
+		pvs.add("objectType", clazz);
+		beanDefinition.setPropertyValues(pvs);
+	}
+
+	private String factoryMethodName(AnnotatedGenericBeanDefinition beanDefinition) {
+		AnnotationMetadata metadata = beanDefinition.getMetadata();
+		Set<MethodMetadata> annotatedMethods = metadata.getAnnotatedMethods(Bean.class.getName());
+		Assert.isTrue(1 == annotatedMethods.size(), "just one factory method must have @Bean annotation");
+		MethodMetadata factoryMethod = annotatedMethods.iterator().next();
+		return factoryMethod.getMethodName();
+	}
+
+	public static class TransformFactoryBean {
 
 		@Autowired
 		private AutowiredBean pouet;
 
-		private Class<SuperSayen> objectType;
+		private Class<Sayan> objectType;
 
 		@Bean
-		public SuperSayen getObject() throws Exception {
-			SuperSayen newInstance = objectType.getConstructor().newInstance();
-			return newInstance;
+		public Sayan getObject() throws Exception {
+			return objectType.getConstructor().newInstance();
 		}
 
-		public void setObjectType(Class<SuperSayen> objectType) {
+		public void setObjectType(Class<Sayan> objectType) {
 			this.objectType = objectType;
+		}
+
+		public AutowiredBean getPouet() {
+			return pouet;
 		}
 
 	}

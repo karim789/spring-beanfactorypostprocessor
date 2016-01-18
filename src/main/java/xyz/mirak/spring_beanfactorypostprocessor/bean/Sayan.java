@@ -1,5 +1,5 @@
 package xyz.mirak.spring_beanfactorypostprocessor.bean;
 
-public interface SuperSayen extends Personne {
+public interface Sayan extends Personne {
 
 }

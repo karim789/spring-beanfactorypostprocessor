@@ -5,11 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperSayen;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 
-
-@Target(ElementType.TYPE)
+@Target(value = { ElementType.TYPE, ElementType.METHOD })
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface Sayen {
-	Class<? extends SuperSayen> type();
+public @interface Transform {
+	
+	Class<? extends Sayan> type();
+	
 }
