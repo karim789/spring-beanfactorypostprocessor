@@ -13,10 +13,12 @@ import org.springframework.util.Assert;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.BeanHolder;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Guillaume;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Karim;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.MegaSuperKarim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Nicolas;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Personne;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperGuillaume;
+import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperSayan;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
 import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
 
@@ -49,7 +51,9 @@ public class AppTest {
 	@Test
 	public void test() {
 		for (Personne e : personnes) {
-			logger.debug(e.getName());
+			if (e != null) {
+				logger.debug(e.getName());
+			}
 		}
 
 		Assert.isInstanceOf(Yoann.class, yoann);
@@ -57,10 +61,10 @@ public class AppTest {
 		Assert.isInstanceOf(Sayan.class, guillaume);
 		Assert.isInstanceOf(SuperGuillaume.class, guillaume);
 		Assert.isInstanceOf(Karim.class, karim);
-		//Assert.isInstanceOf(SuperSayan.class, karim);
-		//Assert.isInstanceOf(MegaSuperKarim.class, karim);
+		Assert.isInstanceOf(SuperSayan.class, karim);
+		Assert.isInstanceOf(MegaSuperKarim.class, karim);
 
-		//Assert.notNull(beanHolder.getKarim());
+		 Assert.notNull(beanHolder.getKarim());
 	}
 
 }

@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
 
-public class TransformFactoryBean implements FactoryBean {
+public class TransformFactoryBean implements FactoryBean<Object> {
 
-	//@Autowired
+	@Autowired
 	private AutowiredBean pouet;
 
-	private Class objectType;
+	private Class<?> objectType;
 
 	boolean singleton = true;
 
@@ -20,7 +20,7 @@ public class TransformFactoryBean implements FactoryBean {
 	}
 
 	@Override
-	public Class getObjectType() {
+	public Class<?> getObjectType() {
 		return objectType;
 	}
 
@@ -29,7 +29,7 @@ public class TransformFactoryBean implements FactoryBean {
 		return singleton;
 	}
 
-	public void setObjectType(Class objectType) {
+	public void setObjectType(Class<?> objectType) {
 		this.objectType = objectType;
 	}
 
