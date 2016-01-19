@@ -36,28 +36,10 @@ public class MainConfiguration implements BeanDefinitionRegistryPostProcessor, O
 		sayenBeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry(beanFactory);
 	}
 
-	/*
-	 * @Bean public static SayenBeanFactoryPostProcessor
-	 * sayenBeanFactoryPostProcessor() { return new
-	 * SayenBeanFactoryPostProcessor(); }
-	 */
-
-	/*
-	 * @Bean public static SayenBeanDefinitionRegistryPostProcessor
-	 * sayenBeanDefinitionRegistryPostProcessor() { return new
-	 * SayenBeanDefinitionRegistryPostProcessor(); }
-	 */
-
 	@Bean
 	public AutowiredBean autowiredBean() {
 		return new AutowiredBean();
 	}
-
-	// @Bean
-	/* @Transform(type = MegaSuperKarim.class) */
-	// public Karim Karim() {
-	// return new Karim();
-	// }
 
 	@Bean
 	@Transform(type = MegaSuperKarim.class)
@@ -65,15 +47,7 @@ public class MainConfiguration implements BeanDefinitionRegistryPostProcessor, O
 		return new Karim();
 	}
 
-	/*@Bean
-	public TransformFactoryBean Guillaume() {
-		TransformFactoryBean transformFactoryBean = new TransformFactoryBean();
-		transformFactoryBean.setObjectType(SuperGuillaume.class);
-		return transformFactoryBean;
-	}*/
-
 	@Bean
-	@Transform(type = SuperGuillaume.class)
 	public Guillaume Guillaume() {
 		return new Guillaume();
 	}
@@ -89,7 +63,7 @@ public class MainConfiguration implements BeanDefinitionRegistryPostProcessor, O
 	}
 
 	@Bean
-	public BeanHolder XeanHolder() {
+	public BeanHolder beanHolder() {
 		return new BeanHolder();
 	}
 }

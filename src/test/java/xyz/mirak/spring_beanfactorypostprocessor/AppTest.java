@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,6 +22,7 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperGuillaume;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperSayan;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
 import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
+import xyz.mirak.spring_beanfactorypostprocessor.conf.TransformFactoryBean;
 
 /**
  * Unit test for simple App.
@@ -31,23 +33,27 @@ public class AppTest {
 	private static Logger logger = LoggerFactory.getLogger(App.class);
 
 	@Autowired
-	Personne[] personnes;
+	private Personne[] personnes;
 
 	@Autowired
-	BeanHolder beanHolder;
+	private BeanHolder beanHolder;
 
 	@Autowired
-	Yoann yoann;
+	private Yoann yoann;
 
 	@Autowired
-	Nicolas nicolas;
+	private Nicolas nicolas;
 
 	@Autowired
-	Guillaume guillaume;
+	private Guillaume guillaume;
 
 	@Autowired
-	Karim karim;
-
+	private Karim karim;
+	
+	/*@Autowired
+	@Qualifier("&Karim")
+	private TransformFactoryBean transformerKarim;
+*/
 	@Test
 	public void test() {
 		for (Personne e : personnes) {
@@ -63,8 +69,8 @@ public class AppTest {
 		Assert.isInstanceOf(Karim.class, karim);
 		Assert.isInstanceOf(SuperSayan.class, karim);
 		Assert.isInstanceOf(MegaSuperKarim.class, karim);
-
-		 Assert.notNull(beanHolder.getKarim());
+		
+		Assert.notNull(beanHolder.getKarim());
 	}
 
 }
