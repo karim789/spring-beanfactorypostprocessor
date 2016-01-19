@@ -13,7 +13,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.core.PriorityOrdered;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 
@@ -22,13 +22,13 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Karim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 
-public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor, PriorityOrdered {
+public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Ordered {
 
 	private static Logger logger = LoggerFactory.getLogger(SayenBeanFactoryPostProcessor.class);
 
 	@Override
 	public int getOrder() {
-		return HIGHEST_PRECEDENCE;
+		return 0;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class SayenBeanFactoryPostProcessor implements BeanFactoryPostProcessor, 
 			Class<? extends Sayan> sayenClass = sayenAnnotation.type();
 
 			AnnotatedGenericBeanDefinition sayenFactoryBeanDefinition = new AnnotatedGenericBeanDefinition(
-					TransformFactoryBean.class);
+					TransformFactoryBean.class, Autowire.BY_TYPE.value(), true););
 			setPropertyValues(sayenFactoryBeanDefinition, "objectType", sayenClass);
 			setPropertyValues(sayenFactoryBeanDefinition, "singleton", true);
 			String factoryBeanName = originalBeanName;
