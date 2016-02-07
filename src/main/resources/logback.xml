@@ -12,11 +12,9 @@
 
 	<!-- <logger name="org.springframework">
 		<level value="${org.springframework-level:-{$root-level:-INFO}}" />
-		<appender-ref ref="CONSOLE" />
 	</logger> -->
 	<!-- <logger name="org.springframework">
 		<level value="debug" />
-		<appender-ref ref="STDOUT" />
 	</logger> -->
 	
 	<root level="debug">
