@@ -16,13 +16,11 @@ import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
  * Hello world!
  * 
  */
-public class App
-{
-	
+public class App {
+
 	private static Logger logger = LoggerFactory.getLogger(App.class);
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		System.out.println("Hello World!");
 
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(MainConfiguration.class);
@@ -30,7 +28,7 @@ public class App
 		Map<String, Personne> beansOfType = ctx.getBeansOfType(Personne.class);
 		for (Entry<String, Personne> e : beansOfType.entrySet()) {
 			logger.debug(e.getValue().getName());
-			
+
 		}
 		BeanHolder karimBeanHolder = ctx.getBean(BeanHolder.class);
 		Assert.notNull(karimBeanHolder.getKarim());

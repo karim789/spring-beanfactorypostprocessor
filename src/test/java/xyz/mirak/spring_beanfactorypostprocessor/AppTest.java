@@ -22,7 +22,6 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperGuillaume;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.SuperSayan;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
 import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
-import xyz.mirak.spring_beanfactorypostprocessor.conf.TransformFactoryBean;
 
 /**
  * Unit test for simple App.
@@ -30,7 +29,7 @@ import xyz.mirak.spring_beanfactorypostprocessor.conf.TransformFactoryBean;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextHierarchy({ @ContextConfiguration(classes = MainConfiguration.class) })
 public class AppTest {
-	private static Logger logger = LoggerFactory.getLogger(App.class);
+	private static Logger logger = LoggerFactory.getLogger(AppTest.class);
 
 	@Autowired
 	private Personne[] personnes;
@@ -49,16 +48,16 @@ public class AppTest {
 
 	@Autowired
 	private Karim karim;
-	
-	/*@Autowired
-	@Qualifier("&Karim")
-	private TransformFactoryBean transformerKarim;
-*/
+
+	@Autowired
+	@Qualifier("toto")
+	private Personne toto;
+
 	@Test
 	public void test() {
 		for (Personne e : personnes) {
 			if (e != null) {
-				logger.debug(e.getName());
+				logger.info(e.getName());
 			}
 		}
 
@@ -69,8 +68,9 @@ public class AppTest {
 		Assert.isInstanceOf(Karim.class, karim);
 		Assert.isInstanceOf(SuperSayan.class, karim);
 		Assert.isInstanceOf(MegaSuperKarim.class, karim);
-		
+
 		Assert.notNull(beanHolder.getKarim());
+		Assert.isTrue(karim.isPostProcessAfterInitialization(), "bean should be post processed after initialisation");
 	}
 
 }

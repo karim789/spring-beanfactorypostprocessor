@@ -17,12 +17,11 @@ import org.springframework.core.type.StandardMethodMetadata;
 
 import xyz.mirak.spring_beanfactorypostprocessor.annotation.Transform;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
-import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
 import xyz.mirak.spring_beanfactorypostprocessor.conf.TransformFactoryBean;
 
 public class SayenBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, Ordered {
 
-	private static Logger logger = LoggerFactory.getLogger(MainConfiguration.class);
+	private static Logger logger = LoggerFactory.getLogger(SayenBeanDefinitionRegistryPostProcessor.class);
 
 	@Override
 	public int getOrder() {
@@ -36,7 +35,7 @@ public class SayenBeanDefinitionRegistryPostProcessor implements BeanDefinitionR
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanFactory) throws BeansException {
-		
+
 		for (String originalBeanName : beanFactory.getBeanDefinitionNames()) {
 			BeanDefinition originalBeanDefinition = beanFactory.getBeanDefinition(originalBeanName);
 			logger.debug("original beanName=" + originalBeanName + ", " + originalBeanDefinition.toString());

@@ -10,7 +10,7 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 @Target(value = { ElementType.TYPE, ElementType.METHOD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Transform {
-	
+
 	Class<? extends Sayan> type();
-	
+
 }

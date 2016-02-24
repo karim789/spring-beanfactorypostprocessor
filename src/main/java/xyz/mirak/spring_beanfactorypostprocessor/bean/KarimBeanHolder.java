@@ -10,7 +10,7 @@ public class KarimBeanHolder {
 	@Autowired
 	@Qualifier("Karim")
 	private MegaSuperKarim karim;
-	
+
 	public Personne getKarim() {
 		return karim;
 	}
