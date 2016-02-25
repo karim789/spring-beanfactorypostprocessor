@@ -11,12 +11,13 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.Karim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.MegaSuperKarim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Nicolas;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
+import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.SayenBeanFactoryPostProcessor;
 import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.TestBeanPostProcessor;
 
 @Configuration
 /*@Import(SayenImportBeanDefinitionRegistrar.class)*/
 /*@Import(SayenBeanDefinitionRegistryPostProcessorConfig.class)*/
-public class MainConfiguration extends SayenBeanDefinitionRegistryPostProcessorConfig {
+public class MainConfiguration /*extends SayenBeanDefinitionRegistryPostProcessorConfig */ {
 
 	/*@Bean
 	public static SayenBeanDefinitionRegistryPostProcessor sayenBeanDefinitionRegistryPostProcessor() {
@@ -27,6 +28,11 @@ public class MainConfiguration extends SayenBeanDefinitionRegistryPostProcessorC
 	public SayenImportBeanDefinitionRegistrar sayenImportBeanDefinitionRegistrar() {
 		return new SayenImportBeanDefinitionRegistrar();
 	}*/
+
+	@Bean
+	public SayenBeanFactoryPostProcessor sayenBeanFactoryPostProcessor() {
+		return new SayenBeanFactoryPostProcessor();
+	}
 
 	@Bean
 	public TestBeanPostProcessor testBeanPostProcessor() {
