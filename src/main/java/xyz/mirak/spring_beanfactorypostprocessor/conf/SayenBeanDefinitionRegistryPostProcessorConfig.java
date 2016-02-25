@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 
 import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.SayenBeanDefinitionRegistryPostProcessor;
 
+/*@Configuration*/
 public class SayenBeanDefinitionRegistryPostProcessorConfig implements BeanDefinitionRegistryPostProcessor, Ordered {
 
 	private SayenBeanDefinitionRegistryPostProcessor sayenBeanDefinitionRegistryPostProcessor = new SayenBeanDefinitionRegistryPostProcessor();
@@ -26,4 +27,5 @@ public class SayenBeanDefinitionRegistryPostProcessorConfig implements BeanDefin
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanFactory) throws BeansException {
 		sayenBeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry(beanFactory);
 	}
+
 }

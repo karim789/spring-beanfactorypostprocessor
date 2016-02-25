@@ -2,7 +2,6 @@ package xyz.mirak.spring_beanfactorypostprocessor.conf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import xyz.mirak.spring_beanfactorypostprocessor.annotation.Transform;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.AutowiredBean;
@@ -12,11 +11,11 @@ import xyz.mirak.spring_beanfactorypostprocessor.bean.Karim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.MegaSuperKarim;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Nicolas;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Yoann;
-import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.SayenImportBeanDefinitionRegistrar;
 import xyz.mirak.spring_beanfactorypostprocessor.postprocessor.TestBeanPostProcessor;
 
 @Configuration
-@Import(SayenImportBeanDefinitionRegistrar.class)
+/*@Import(SayenImportBeanDefinitionRegistrar.class)*/
+/*@Import(SayenBeanDefinitionRegistryPostProcessorConfig.class)*/
 public class MainConfiguration extends SayenBeanDefinitionRegistryPostProcessorConfig {
 
 	/*@Bean
