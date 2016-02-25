@@ -4,37 +4,31 @@ import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.StandardMethodMetadata;
 
 import xyz.mirak.spring_beanfactorypostprocessor.annotation.Transform;
 import xyz.mirak.spring_beanfactorypostprocessor.bean.Sayan;
 import xyz.mirak.spring_beanfactorypostprocessor.conf.TransformFactoryBean;
 
-public class SayenBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, Ordered {
+public class SayenImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar, Ordered {
 
-	private static Logger logger = LoggerFactory.getLogger(SayenBeanDefinitionRegistryPostProcessor.class);
+	private static Logger logger = LoggerFactory.getLogger(SayenImportBeanDefinitionRegistrar.class);
 
 	@Override
 	public int getOrder() {
-		return LOWEST_PRECEDENCE;
+		return 0;
 	}
 
 	@Override
-	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		logger.debug("rien");
-	}
-
-	@Override
-	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanFactory) throws BeansException {
+	public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry beanFactory) {
 
 		for (String originalBeanName : beanFactory.getBeanDefinitionNames()) {
 			BeanDefinition originalBeanDefinition = beanFactory.getBeanDefinition(originalBeanName);

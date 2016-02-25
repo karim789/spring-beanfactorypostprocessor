@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,7 +26,7 @@ import xyz.mirak.spring_beanfactorypostprocessor.conf.MainConfiguration;
  * Unit test for simple App.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextHierarchy({ @ContextConfiguration(classes = MainConfiguration.class) })
+@ContextHierarchy({ @ContextConfiguration(/*initializers=Init.class,*/classes = MainConfiguration.class) })
 public class AppTest {
 	private static Logger logger = LoggerFactory.getLogger(AppTest.class);
 
@@ -48,10 +47,6 @@ public class AppTest {
 
 	@Autowired
 	private Karim karim;
-
-	@Autowired
-	@Qualifier("toto")
-	private Personne toto;
 
 	@Test
 	public void test() {
